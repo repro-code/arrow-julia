@@ -76,7 +76,7 @@ function bytevector(t::Table, off)
     off += get(t, off, UOffsetT)
     start = off + sizeof(UOffsetT)
     len = get(t, off, UOffsetT)
-    return view(bytes(t), (start + 1):(start + len + 1))
+    return view(bytes(t), (start + 1):(start + len))
 end
 
 """
