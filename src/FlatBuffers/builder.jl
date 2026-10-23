@@ -57,14 +57,14 @@ Builder(size=0) = Builder(
 )
 
 function reset!(b::Builder)
-    empty!(b.bytes)
+    # Keep the buffer, like Clear of the C++ builder, so it is reused
+    b.head = length(b.bytes)
     empty!(b.vtable)
-    emtpy!(b.vtables)
+    empty!(b.vtables)
     empty!(b.sharedstrings)
     b.minalign = 1
     b.nested = false
     b.finished = false
-    b.head = 0
     return
 end
 
