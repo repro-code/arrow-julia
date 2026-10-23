@@ -69,6 +69,7 @@ function Base.String(t::Table, off)
     off += get(t, off, UOffsetT)
     start = off + sizeof(UOffsetT)
     len = get(t, off, UOffsetT)
+    checkbytes(bytes(t), start, len)
     return unsafe_string(pointer(bytes(t), start + 1), len)
 end
 
@@ -109,8 +110,10 @@ end
 function Array{T}(t::Table, off) where {T}
     a = vector(t, off)
     S = T <: Table ? UOffsetT : T <: Struct ? NTuple{structsizeof(T),UInt8} : T
+    len = vectorlen(t, off)
+    checkbytes(bytes(t), a, len * sizeof(S))
     ptr = convert(Ptr{S}, pointer(bytes(t), a + 1))
-    data = unsafe_wrap(Base.Array, ptr, vectorlen(t, off))
+    data = unsafe_wrap(Base.Array, ptr, len)
     return Array{T,S,typeof(t)}(t, a, data)
 end
 
