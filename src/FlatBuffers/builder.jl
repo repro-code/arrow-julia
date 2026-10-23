@@ -319,6 +319,19 @@ end
 
 createbytevector(b::Builder, v) = createstring!(b, v)
 
+"""
+    createvector!(b::Builder, v::AbstractVector{<:Scalar})
+
+Create a vector of scalars at once, instead of prepending its elements one by one.
+"""
+function createvector!(b::Builder, v::AbstractVector{T}) where {T<:Scalar}
+    n = sizeof(T) * length(v)
+    startvector!(b, sizeof(T), length(v), sizeof(T))
+    b.head -= n
+    copyto!(b.bytes, b.head + 1, reinterpret(UInt8, v), 1, n)  # like `write`, little-endian
+    return endvector!(b, length(v))
+end
+
 function assertnested(b::Builder)
     # If you get this assert, you're in an object while trying to write
     # data that belongs outside of an object.
