@@ -306,7 +306,7 @@ end
 function createstring!(b::Builder, s::Union{AbstractString,AbstractVector{UInt8}})
     assertnotnested(b)
     b.nested = true
-    s = codeunits(s)
+    s = s isa AbstractString ? codeunits(s) : s
     prep!(b, sizeof(UInt32), sizeof(s) + 1)
     place!(b, UInt8(0))
 
