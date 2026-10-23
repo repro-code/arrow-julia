@@ -1126,4 +1126,6 @@ end
             colmetadata!(df, :c, "cckey", "ccvalue")
         end
     end # @testset "DataAPI.metadata"
+
+    include(joinpath(@__DIR__, "flatbuffers.jl"))
 end
